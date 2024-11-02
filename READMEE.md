@@ -9,7 +9,7 @@
 - `app.py` Flask App (Back-End) to handle the form submission and make predictions
 - `index.html` HTML Form
 - `final_gradient_boosting_model.pkl` The final model used for predictions
-- `INF161 Project - Estimation of hospital stay` report containing EDA analysis, model comparisons, 
+- `INF161 Project - Estimation of hospital stay` report containing EDA analysis, model comparisons, and justification for choices made throughout the project
 ---
 # Hospital Length of Stay Prediction
 
