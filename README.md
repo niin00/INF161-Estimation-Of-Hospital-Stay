@@ -99,10 +99,10 @@ The project uses four datasets containing patient information:
 ## Deployment
 
 1. **Saving the Model**:
-   - The final tuned Gradient Boosting model was saved using `joblib` as `gradient_boosting_model.pkl` for easy loading and use in deployment.
+   - The final Gradient Boosting model was saved using `joblib` as `final_gradient_boosting_model.pkl` for easy loading and use in deployment.
 
 2. **Usage Instructions**:
-   - To use the model, load it using `joblib.load('gradient_boosting_model.pkl')`.
+   - To use the model, load it using `joblib.load('final_gradient_boosting_model.pkl')`.
    - Prepare input data in the same format as the training data, including feature scaling and encoding as required.
    - Use the model’s `predict()` method on new data to get predictions for hospital stay length.
 
@@ -113,7 +113,7 @@ import joblib
 import pandas as pd
 
 # Load the model
-model = joblib.load('gradient_boosting_model.pkl')
+model = joblib.load('final_gradient_boosting_model.pkl')
 
 # Prepare sample data (ensure proper encoding and scaling)
 sample_data = pd.DataFrame({
