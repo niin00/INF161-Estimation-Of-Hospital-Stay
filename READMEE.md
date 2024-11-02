@@ -1,7 +1,15 @@
 ### How to run the code
 - Open the terminal and navigate to the folder `inf161project` using the command `cd`
 - Make sure `index.html` is in the folder `Templates`
+- Run the website using command `Flask run`
 - Note: the website is on `localhost:8080/`
+
+### Files
+- `INF161 project.ipynb` file contains the machine learning models, along with data preprocessing steps.
+- `app.py` Flask App (Back-End) to handle the form submission and make predictions
+- `index.html` HTML Form
+- `final_gradient_boosting_model.pkl` The final model used for predictions
+- `INF161 Project - Estimation of hospital stay` report containing EDA analysis, model comparisons, 
 ---
 # Hospital Length of Stay Prediction
 
@@ -74,8 +82,8 @@ The project uses four datasets containing patient information:
    - Each model was evaluated on the validation and test sets using metrics like RMSE, MAE, and R-squared. Additionally, cross-validation was performed for each model to ensure consistency.
 
 2. **Model Performance Summary**:
-   - **Gradient Boosting** outperformed the other models with the lowest RMSE and MAE on the test set.
-   - Cross-validation results indicated that Gradient Boosting achieved consistent performance across different folds, supporting its selection as the final model.
+   - **Tuned Gradient Boosting** outperformed the other models with the lowest RMSE and MAE on the test set.
+   - Cross-validation results indicated that the tuned Gradient Boosting achieved consistent performance across different folds, supporting its selection as the final model.
 
 ## Hyperparameter Tuning and Final Model Selection
 
@@ -104,12 +112,29 @@ The project uses four datasets containing patient information:
 ## Deployment
 
 1. **Saving the Model**:
-   - The final Gradient Boosting model was saved using `joblib` as `gradient_boosting_model.pkl` for easy loading and use in deployment.
+   - The final Gradient Boosting model was saved using `joblib` as `tuned_gradient_boosting_model.pkl` for easy loading and use in deployment.
 
 2. **Usage Instructions**:
-   - To use the model, load it using `joblib.load('gradient_boosting_model.pkl')`.
+   - To use the model, load it using `joblib.load('tuned_gradient_boosting_model.pkl')`.
    - Prepare input data in the same format as the training data, including feature scaling and encoding as required.
    - Use the model’s `predict()` method on new data to get predictions for hospital stay length.
+
+
+Based on the metrics provided, the **tuned Gradient Boosting model** shows a slight improvement over the initial (untuned) Gradient Boosting model, particularly in terms of test performance metrics. Here’s a comparison to highlight the differences:
+
+| Metric                            | Untuned Gradient Boosting      | Tuned Gradient Boosting          |
+|-----------------------------------|--------------------------------|----------------------------------|
+| **Validation RMSE**               | 22.963                         | 22.819                           |
+| **Test RMSE**                     | 21.373                         | 21.265                           |
+| **Test MAE**                      | 12.065                         | 11.970                           |
+| **Test R-squared**                | 0.098                          | 0.107                            |
+| **Cross-Validation Mean RMSE**    | 20.154                         | N/A (not recalculated)           |
+
+### Analysis
+
+1. **Test RMSE**: The tuned model has a lower Test RMSE (21.265) compared to the untuned model (21.373), indicating slightly better performance on unseen data.
+2. **Test MAE**: The tuned model also has a lower MAE (11.970 vs. 12.065), meaning its predictions are, on average, closer to the actual values.
+3. **Test R-squared**: The tuned model achieves a slightly higher R-squared (0.107 vs. 0.098), indicating a small improvement in the proportion of variance explained by the model.
 
 ### Example Usage
 
@@ -118,7 +143,7 @@ import joblib
 import pandas as pd
 
 # Load the model
-model = joblib.load('gradient_boosting_model.pkl')
+model = joblib.load('tuned_gradient_boosting_model.pkl')
 
 # Prepare sample data (ensure proper encoding and scaling)
 sample_data = pd.DataFrame({
