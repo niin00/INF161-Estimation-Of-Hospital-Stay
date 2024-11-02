@@ -137,7 +137,7 @@ print(f"Predicted Length of Stay: {prediction[0]} days")
 
 1. **Limitations**:
    - This model may have limitations with outliers or specific subpopulations due to data skewness. Adjustments such as further tuning or using ensemble techniques could improve future models.
-   - More information regarding the EDA can be found in the `PDF` document
+   - More information regarding EDA and other models can be found in the `PDF` document
 
 ---
 
