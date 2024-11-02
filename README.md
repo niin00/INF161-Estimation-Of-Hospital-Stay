@@ -139,11 +139,7 @@ print(f"Predicted Length of Stay: {prediction[0]} days")
 1. **Limitations**:
    - This model may have limitations with outliers or specific subpopulations due to data skewness. Adjustments such as further tuning or using ensemble techniques could improve future models.
 
-Certainly! Here’s the expanded **Future Work** section with a note on using SHAP for model interpretability and transparency:
-
----
-
-## Next steps for furher development
+## Next steps for further development
 
 1. **Incorporate Additional Data**: Integrating more granular data on disease progression or treatment plans could potentially improve the model’s accuracy and provide more tailored predictions for individual patients.
 
