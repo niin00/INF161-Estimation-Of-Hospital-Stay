@@ -1,4 +1,4 @@
-# Prosject: Databeskrivelse
+# Prosjekt: Databeskrivelse
 
 ## Data
 Dette datasettet omfatter 8261 individuelt kritisk syke pasienter fra 5 medisinske sentre i USA, registrert i periodene 1989-1991 og 1992-1994.
