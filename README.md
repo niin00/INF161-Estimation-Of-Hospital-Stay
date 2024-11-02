@@ -148,3 +148,9 @@ Certainly! Here’s the expanded **Future Work** section with a note on using SH
    - **Explaining Predictions**: SHAP can help explain why the model predicts a certain length of stay for a specific patient. In healthcare settings, this is critical, as understanding the model’s reasoning is essential for gaining trust and supporting clinical decision-making.
    - **Identifying Potential Biases**: By examining SHAP values across different patient subgroups (e.g., based on age, gender, or disease severity), potential biases in the model can be identified. For instance, it would be possible to detect if the model is overly reliant on age or gender, helping to ensure fair and unbiased predictions.
    - **Improving Model Transparency**: Using SHAP increases model transparency, making it easier for clinicians and other stakeholders to understand and trust the model’s predictions. This transparency can facilitate acceptance and adoption in real-world healthcare applications.
+
+
+### How to Run the code
+- Open the terminal and navigate to folder `inf161project` using the commando `cd`. 
+- Make sure the `index.html` is in the `Templates` folder.
+- When you are in the `inf161project` folder, using the commando `flask run`
