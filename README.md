@@ -1,7 +1,8 @@
 ### How to Run the code
 - Open the terminal and navigate to folder `inf161project` using the commando `cd`. 
 - Make sure the `index.html` is in the `Templates` folder.
-- When you are in the `inf161project` folder, using the commando `flask run`
+- When you are in the `inf161project` folder, use commando `flask run` to run the website.
+- Note: The website is on `localhost:8080/`
 ---
 # Hospital Length of Stay Prediction
 
