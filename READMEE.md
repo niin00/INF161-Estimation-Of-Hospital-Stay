@@ -10,6 +10,7 @@
 - `index.html` HTML Form
 - `final_gradient_boosting_model.pkl` The final model used for predictions
 - `INF161 Project - Estimation of hospital stay` report containing EDA analysis, model comparisons, and justification for choices made throughout the project
+- Note: I have included the other models such as `tuned_xgboost_model.pkl` for future testing
 ---
 # Hospital Length of Stay Prediction
 
