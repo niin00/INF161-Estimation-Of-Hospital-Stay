@@ -143,11 +143,11 @@ Certainly! Here’s the expanded **Future Work** section with a note on using SH
 
 ---
 
-## Future Work
+## Next steps for furher development
 
 1. **Incorporate Additional Data**: Integrating more granular data on disease progression or treatment plans could potentially improve the model’s accuracy and provide more tailored predictions for individual patients.
 
-2. **Explore Deep Learning Models**: Deep learning models, such as neural networks, may be able to capture complex, non-linear relationships in the data that traditional models may miss. However, they would require careful tuning and interpretation to avoid overfitting.
+2. **Explore Deep Learning Models**: Deep learning models, such as neural networks, may be able to capture complex, non-linear relationships in the data that traditional models may miss. 
 
 3. **Using SHAP (SHapley Additive exPlanations) for Model Interpretability**:
    - **Understanding Feature Impact**: SHAP values can provide insights into how much each feature contributes to the predicted length of stay for each individual patient. This allows for identifying the most influential factors driving the predictions on a patient-by-patient basis.
