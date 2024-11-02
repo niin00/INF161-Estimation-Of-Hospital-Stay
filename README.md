@@ -1,153 +1,87 @@
-### How to Run the code
-- Open the terminal and navigate to folder `inf161project` using the commando `cd`. 
-- Make sure the `index.html` is in the `Templates` folder.
-- When you are in the `inf161project` folder, use commando `flask run` to run the website.
-- Note: The website is on `localhost:8080/`
----
-# Hospital Length of Stay Prediction
+# Prosject: Databeskrivelse
 
-## Project Overview
-This project aims to predict the expected length of hospital stay for patients based on demographic, physiological, and disease severity data. The goal is to build a robust machine learning model that can aid hospitals in resource planning by forecasting patient stay durations.
+## Data
+Dette datasettet omfatter 8261 individuelt kritisk syke pasienter fra 5 medisinske sentre i USA, registrert i periodene 1989-1991 og 1992-1994.
 
-## Project Structure
-The project is organized into the following steps:
-1. **Data Preparation**
-2. **Feature Engineering**
-3. **Exploratory Data Analysis (EDA)**
-4. **Modeling and Evaluation**
-5. **Hyperparameter Tuning and Final Model Selection**
-6. **Deployment**
+Hver rad er journal data for innlagte pasienter som oppfylte inklusjons- og eksklusjonskriteriene for ni sykdomskategorier: akutt respirasjonssvikt, kronisk obstruktiv lungesykdom, hjertesvikt, leversykdom, koma, tykktarmskreft, lungekreft, multiple organsvikt med malignitet og multiple organsvikt med sepsis.
 
-## Dataset Description
-The project uses four datasets containing patient information:
+Det er 4 datasett (antall pasienter, antall variabler):
+- sykehusdata (7740, 3)
+- informasjon om sykdomsalvorlighet (4, 20)
+- fysiologiske data (7740, 15)
+- demografiske data (7742, 6)
 
-1. `demographics.csv`: Demographic details like age, gender, education, income, and ethnicity.
-2. `hospital.csv`: Contains the length of hospital stay (`oppholdslengde`) and whether the patient died in the hospital.
-3. `physiological.txt`: Physiological measurements such as heart rate, blood pressure, and respiratory rate.
-4. `severity.json`: Nested data on comorbidities, disease severity, and survival estimates.
+**Sykehusdata**
 
-## Data Preparation
+| Variabelnavn   | Rolle               | Type         | Beskrivelse                                             |
+|----------------|---------------------|--------------|---------------------------------------------------------|
+| pasient_id     | ID                  | Heltall      |                                                         |
+| sykehusdød     | Funksjonsvariabel   | Binær        | Død på sykehuset                                        |
+| oppholdslengde | Responsvariabel     | Kontinuerlig | Antall dager fra studieinngang til utskrivelse          |
 
-1. **Data Cleaning**:
-   - Placeholder values (e.g., `-99`) in the `hospital.csv` dataset were replaced with `NaN` and imputed to avoid skewing analysis.
-   - Missing values in `demographics.csv` were imputed using the median for continuous variables and the mode for categorical variables.
-   - Physiological data from `physiological.txt` was imputed using the median for numerical columns.
 
-2. **Merging Datasets**:
-   - All datasets were merged on the `pasient_id` key to create a single dataset containing demographic, physiological, hospital, and severity data.
-   - For `severity.json`, relevant sections (e.g., `sykdomskategori.0` for disease categories) were flattened and merged.
 
-3. **Imputation of Remaining Missing Values**:
-   - Any remaining missing values in the merged dataset were imputed with the median for numerical columns and the mode for categorical columns.
 
-4. **Data Splitting**:
-   - The consolidated dataset was split into training (52.5%), validation (17.5%), and test sets (30%).
+**Sykdomsalvorlighet**
 
-## Feature Engineering
+| Variabelnavn                | Rolle            | Type               | Beskrivelse                                                                                                                                                                                                                          |
+|-----------------------------|------------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| pasient_id                  | ID               | Heltall |                                                                                                                                                                                                                                      |
+| sykdomskategori_id          | ID               | Heltall             |                                                                                                                                                                                                                                      |
+| dødsfall                    | Funksjonsvariabel| Kontinuerlig | Dødsfall på ethvert tidspunkt frem til National Death Index (NDI) data den 31. desember 1994. Noen pasienter skrives ut før slutten av studien og følges ikke opp. Forfatterne hentet informasjon om dødsfall.                        |
+| sykdom_underkategori        | Funksjonsvariabel| Kategorisk   | Pasientens sykdomsunderkategori blant ARF/MOSF m/Sepsis, CHF, KOLS, Cirrhose, Tykktarmskreft, Koma, Lungekreft, MOSF m/Malig. Tilgjengelig på dag 1.                                                                                                    |
+| sykdom_kategori             | Funksjonsvariabel| Kategorisk          | Pasientens sykdomskategori blant "ARF/MOSF", "KOLS/CHF/Cirrhose", "Kreft", "Koma". Tilgjengelig på dag 1.                                                                                                                                                  |
+| antall_komorbiditeter       | Funksjonsvariabel| Kontinuerlig | Antall samtidige sykdommer (eller komorbiditeter) hos pasienten. Verdiene er ordinale, med høyere verdier som indikerer verre tilstand og lavere overlevelseschanser. Tilgjengelig på dag 1.                                                                |
+| koma_score                  | Funksjonsvariabel| Kontinuerlig | SUPPORT dag 1 Koma-score basert på Glasgow-skalaen (gitt av en modell). Tilgjengelig på dag 1.                                                                                                                                                         |
+| adl_pasient                 | Funksjonsvariabel| Kategorisk   | Indeks for daglige funksjonsaktiviteter (ADL) til pasienten, utfylt av pasienten på dag 7. Høyere verdier indikerer større sjanse for overlevelse.                                                                   |
+| adl_stedfortreder           | Funksjonsvariabel| Kontinuerlig | Indeks for daglige funksjonsaktiviteter (ADL) til pasienten, utfylt av en stedfortreder (f.eks. familiemedlem) dag 1. Høyere verdier indikerer større sjanse for overlevelse.                                                |
+| fysiologisk_score           | Funksjonsvariabel| Kontinuerlig | SUPPORT fysiologisk score på dag 1 (gitt av en modell).                                                                                                                                                                        |
+| apache_fysiologisk_score    | Funksjonsvariabel| Kontinuerlig | APACHE III dag 1 fysiologisk score (uten koma, imp bun, uout for ph1).                                                                                                                                                              |
+| overlevelsesestimat_2mnd    | Funksjonsvariabel| Kontinuerlig | SUPPORT-modellens 2-måneders overlevelsesestimat på dag 1 (gitt av en modell).                                                                                                                                                  |
+| overlevelsesestimat_6mnd    | Funksjonsvariabel| Kontinuerlig | SUPPORT-modellens 6-måneders overlevelsesestimat på dag 1 (gitt av en modell).                                                                                                                                                  |
+| diabetes                    | Funksjonsvariabel| Heltall | Om pasienten har diabetes (1) eller ikke (0). Tilgjengelig på dag 1.                                                                                                                                                |
+| demens                      | Funksjonsvariabel| Kontinuerlig | Om pasienten har demens (1) eller ikke (0). Tilgjengelig på dag 1.                                                                                                                                                     |
+| kreft                       | Funksjonsvariabel| Kategorisk   | Om pasienten har kreft ("yes"), om den har spredt seg (metastatic), eller om den er frisk ("no"). Tilgjengelig på dag 1.                                                                                                                                        |
+| lege_overlevelsesestimat_2mnd| Funksjonsvariabel| Kontinuerlig | Legens 2-måneders overlevelsesestimat for pasienten. Tilgjengelig på dag 1.                                                                                                                                                                                 |
+| lege_overlevelsesestimat_6mnd| Funksjonsvariabel| Kategorisk   | Legens 6-måneders overlevelsesestimat for pasienten. Tilgjengelig på dag 1.                                                                                                                                                                                 |
+| dnr_status                  | Funksjonsvariabel| Kategorisk   | Om pasienten har en ikke-gjenopplivingsordre (DNR) eller ikke. Mulige verdier er "dnr ved innleggelse", "dnr før innleggelse", "mangler", "ingen dnr".                                                                                                   |
+| dnr_dag                     | Funksjonsvariabel| Kontinuerlig | Dag for DNR-ordre (<0 hvis før studie, 0 ved innleggelse, NA hvis det ble oppgitt etter innleggelse).                                                                                                                                                                                              |
 
-1. **New Feature Creation**:
-   - **Age Grouping**: The `alder` (age) column was grouped into categories (e.g., `0-18`, `19-40`, etc.) to better capture age-based trends.
-   - **Comorbidity Count**: A new feature, `komorbiditet_antall`, was created to represent the number of comorbidities for each patient.
 
-2. **Encoding Categorical Variables**:
-   - One-hot encoding was applied to categorical variables such as gender (`kjønn`), ethnicity (`etnisitet`), age group (`alder_gruppe`), income (`inntekt`), and disease category (`sykdomskategori.0`).
 
-3. **Feature Scaling**:
-   - Numerical columns (e.g., `alder`, `utdanning`, `blodtrykk`, etc.) were standardized using `StandardScaler` to ensure consistency across features.
 
-4. **Reducing Redundancy**:
-   - Highly correlated features were identified with a threshold of 0.85, and one feature from each highly correlated pair was removed to minimize multicollinearity.
+**fysiologiske data**
+| Variabelnavn       | Rolle            | Type        | Beskrivelse                                                                                                                                                                                   |
+|-------------------|------------------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| pasient_id        | ID               | Heltall     |                                                                                                                                                                                               |
+| blodtrykk         | Funksjonsvariabel| Kontinuerlig| Gjennomsnittlig arterielt blodtrykk hos pasienten, målt på dag 1.                                                                                                                                                                    |
+| hvite_blodlegemer | Funksjonsvariabel| Kontinuerlig| Antall hvite blodlegemer (i tusen) målt på dag 1.                                                                                                                                              |
+| hjertefrekvens    | Funksjonsvariabel| Kontinuerlig| Pasientens hjertefrekvens målt på dag 1.                                                                                                                                                       |
+| respirasjonsfrekvens | Funksjonsvariabel| Kontinuerlig| Pasientens respirasjonsfrekvens målt på dag 1.                                                                                                                                               |
+| kroppstemperatur  | Funksjonsvariabel| Kontinuerlig| Kroppstemperatur i Celsius-grader målt på dag 1.                                                                                                                                               |
+| lungefunksjon     | Funksjonsvariabel| Kontinuerlig| \(PaO_2/FiO_2\) forhold målt på dag 1. Forholdet mellom arterielt oksygen partialtrykk (PaO2 i mmHg) og fraksjonert inspirert oksygen (FiO2 uttrykt som en fraksjon). Ofte brukt klinisk indikator på hypoksemi, selv om dets diagnostiske nytteverdi er kontroversiell. Spesifikke verdier kan assosieres med forskjellige nivåer av dødelighet. Det kan være verdt å vurdere å kategorisere disse verdiene etter noen intervaller: [litfl.com/pao2-fio2-ratio/](https://litfl.com/pao2-fio2-ratio/) |
+| serumalbumin      | Funksjonsvariabel| Kontinuerlig| Serum albuminnivåer målt på dag 1. Albumin er et protein i blodet. Høyt albumin indikerer dehydrering. Lavt albumin kan tyde på lever- og nyresvikt, underernæring, og økt dødsrisiko.                                                                                                                                                            |
+| bilirubin         | Funksjonsvariabel| Kontinuerlig| Bilirubinnivåer målt på dag 7. Nivåene måles for å vurdere leverfunksjon og opphopning i kroppen.                                                                                                                                                                |
+| kreatinin         | Funksjonsvariabel| Kontinuerlig| Serumkreatininnivåer målt på dag 1. Nivåene måles for å vurdere nyrefunksjon og hvordan kroppen filtrerer avfall.                                                                                                                                                            |
+| natrium           | Funksjonsvariabel| Kontinuerlig| Serum natriumkonsentrasjon målt på dag 1. Nivåene måles for å sjekke kroppens væskebalanse og funksjon av nyrer.                                                                                                                                                      |
+| blod_ph           | Funksjonsvariabel| Kontinuerlig| Arteriell blod-pH at day 1. Blodets pH er vanligvis mellom 7,35 og 7,45. Unormale resultater kan skyldes lungesykdom, nyresykdom, metabolske sykdommer, eller medisiner. Hode- eller nakkeskader eller andre skader som påvirker pusting kan også føre til unormale resultater. |
+| glukose           | Funksjonsvariabel| Heltall     | Glukosenivåer målt på dag 1. Nivåene måles for å vurdere energinivå og blodsukkerkontroll i kroppen.                                                                                                                                                                   |
+| blodurea_nitrogen | Funksjonsvariabel| Heltall     | Blodurea-nitrogennivåer målt på dag 1. Blodurea-nitrogen er et avfallsstoff. Nivået måles for å sjekke nyrefunksjon og hvordan kroppen fjerner avfall.                                                                                                                                                         |
+| urinmengde        | Funksjonsvariabel| Heltall     | Urinmengde målt på dag.  1.                                                                                                                                                                     |
 
-## Exploratory Data Analysis (EDA)
-- **Correlation Analysis**: A heatmap was used to visualize relationships between numerical features and identify multicollinearity.
-- **Distribution of Length of Stay**: The target variable (`oppholdslengde`) exhibited a right-skewed distribution, with most patients having shorter stays and a few experiencing significantly longer stays.
-- **Boxplots and Scatter Plots**: Plots such as age vs. length of stay and gender vs. length of stay were analyzed to understand potential relationships and identify patterns in hospital stay lengths.
 
-## Modeling and Evaluation
 
-1. **Initial Model Evaluation**:
-   - Multiple models were tested, including:
-     - **Linear Regression**
-     - **Random Forest**
-     - **Support Vector Regression (SVR)**
-     - **Gradient Boosting**
-     - **XGBoost**
-   - Each model was evaluated on the validation and test sets using metrics like RMSE, MAE, and R-squared. Additionally, cross-validation was performed for each model to ensure consistency.
+**Demografisk data**
 
-2. **Model Performance Summary**:
-   - **Gradient Boosting** outperformed the other models with the lowest RMSE and MAE on the test set.
-   - Cross-validation results indicated that Gradient Boosting achieved consistent performance across different folds, supporting its selection as the final model.
+| Variabelnavn  | Rolle            | Type        | Beskrivelse   |
+|---------------|------------------|-------------|------------------------------------------------------------------------------------------------------------------|
+| pasient_id    | ID               | Heltall     |                                                                                                                  |
+| alder         | Funksjonsvariabel| Kontinuerlig| Pasientenes alder i år.                                                                                           |
+| kjønn         | Funksjonsvariabel| Kategorisk  | Pasientens kjønn. Oppførte verdier er {mann, kvinne}.                                                            |
+| utdanning     | Funksjonsvariabel| Kategorisk  | Antall år med utdanning                                                                                          |
+| inntekt       | Funksjonsvariabel| Kategorisk  | Pasientens inntekt. Oppførte verdier er {"$11-$25k", "$25-$50k", ">$50k", "under $11k"}.                         |
+| etnisitet     | Funksjonsvariabel| Kategorisk  | Pasientens etnisitet. Oppførte verdier er {asiatisk, svart, latinsk, mangler, annen, hvit}.                      |
 
-## Hyperparameter Tuning and Final Model Selection
 
-1. **Hyperparameter Tuning**:
-   - A GridSearchCV was used to tune the hyperparameters for Gradient Boosting. The best parameters were:
-     - `learning_rate`: 0.01
-     - `max_depth`: 3
-     - `min_samples_leaf`: 4
-     - `min_samples_split`: 2
-     - `n_estimators`: 200
-     - `subsample`: 0.8
 
-2. **Final Model Evaluation**:
-   - **Validation Performance**:
-     - RMSE: 22.82
-     - MAE: 12.11
-     - R-squared: 0.085
-   - **Test Performance**:
-     - RMSE: 21.26
-     - MAE: 11.97
-     - R-squared: 0.107
-
-3. **Feature Importance Analysis**:
-   - The final model's feature importances were plotted to understand the relative contribution of each feature to the model’s predictions.
-
-## Deployment
-
-1. **Saving the Model**:
-   - The final Gradient Boosting model was saved using `joblib` as `final_gradient_boosting_model.pkl` for easy loading and use in deployment.
-
-2. **Usage Instructions**:
-   - To use the model, load it using `joblib.load('final_gradient_boosting_model.pkl')`.
-   - Prepare input data in the same format as the training data, including feature scaling and encoding as required.
-   - Use the model’s `predict()` method on new data to get predictions for hospital stay length.
-
-### Example Usage
-
-```python
-import joblib
-import pandas as pd
-
-# Load the model
-model = joblib.load('final_gradient_boosting_model.pkl')
-
-# Prepare sample data (ensure proper encoding and scaling)
-sample_data = pd.DataFrame({
-    'age': [65],
-    'gender_male': [1],
-    'heart_rate': [78],
-    # Include other features as required
-})
-
-# Predict length of stay
-prediction = model.predict(sample_data)
-print(f"Predicted Length of Stay: {prediction[0]} days")
-```
-
-## Additional Information
-
-1. **Limitations**:
-   - This model may have limitations with outliers or specific subpopulations due to data skewness. Adjustments such as further tuning or using ensemble techniques could improve future models.
-   - Additional information regarding the EDA is included in the PDF file
-
-## Next steps for further development
-
-1. **Incorporate Additional Data**: Integrating more granular data on disease progression or treatment plans could potentially improve the model’s accuracy and provide more tailored predictions for individual patients.
-
-2. **Explore Deep Learning Models**: Deep learning models, such as neural networks, may be able to capture complex, non-linear relationships in the data that traditional models may miss. 
-
-3. **Using SHAP (SHapley Additive exPlanations) for Model Interpretability**:
-   - **Understanding Feature Impact**: SHAP values can provide insights into how much each feature contributes to the predicted length of stay for each individual patient. This allows for identifying the most influential factors driving the predictions on a patient-by-patient basis.
-   - **Explaining Predictions**: SHAP can help explain why the model predicts a certain length of stay for a specific patient. In healthcare settings, this is critical, as understanding the model’s reasoning is essential for gaining trust and supporting clinical decision-making.
-   - **Identifying Potential Biases**: By examining SHAP values across different patient subgroups (e.g., based on age, gender, or disease severity), potential biases in the model can be identified. For instance, it would be possible to detect if the model is overly reliant on age or gender, helping to ensure fair and unbiased predictions.
-   - **Improving Model Transparency**: Using SHAP increases model transparency, making it easier for clinicians and other stakeholders to understand and trust the model’s predictions. This transparency can facilitate acceptance and adoption in real-world healthcare applications.
+Kilde: [https://archive.ics.uci.edu/dataset/880/support2](https://archive.ics.uci.edu/dataset/880/support2). I tillfelle at det er forskjeller mellom kilden og denne versjonen, så er det denne versjonen som gjelder for prosjektet. 
