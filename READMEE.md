@@ -147,7 +147,7 @@ print(f"Predicted Length of Stay: {prediction[0]} days")
 
 2. **Explore Deep Learning Models**: Deep learning models, such as neural networks, may be able to capture complex, non-linear relationships in the data that traditional models may miss. 
 
-3. **Using SHAP (SHapley Additive exPlanations) for Model Interpretability**:
+3. **Implement SHAP (SHapley Additive exPlanations) for Model Interpretability**:
    - **Understanding Feature Impact**: SHAP values can provide insights into how much each feature contributes to the predicted length of stay for each individual patient. This allows for identifying the most influential factors driving the predictions on a patient-by-patient basis.
    - **Explaining Predictions**: SHAP can help explain why the model predicts a certain length of stay for a specific patient.
    - **Identifying Potential Biases**: By examining SHAP values across different patient subgroups (e.g., based on age, gender, or disease severity), potential biases in the model can be identified. It would be possible to detect if the model is overly reliant on age or gender, helping to ensure fair and unbiased predictions.
