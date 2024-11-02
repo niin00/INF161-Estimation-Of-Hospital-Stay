@@ -1,5 +1,7 @@
 ### How to run the code
-- 
+- Open the terminal and navigate to the folder `inf161project` using the command `cd`
+- Make sure `index.html` is in the folder `Templates`
+- Note: the website is on `localhost:8080/`
 ---
 # Hospital Length of Stay Prediction
 
@@ -135,13 +137,18 @@ print(f"Predicted Length of Stay: {prediction[0]} days")
 
 1. **Limitations**:
    - This model may have limitations with outliers or specific subpopulations due to data skewness. Adjustments such as further tuning or using ensemble techniques could improve future models.
-
-2. **Future Work**:
-   - Incorporating additional data (e.g., more granular disease progression metrics) could potentially improve accuracy. Exploring deep learning models may also enhance performance for complex relationships.
-
-3. **Contact Information**:
-   - For questions or contributions, please contact [Your Contact Information].
+   - More information regarding the EDA can be found in the `PDF` document
 
 ---
 
-This README should cover all relevant details. Let me know if you would like further customization or have any additional points to include!
+## Next steps for further development
+
+1. **Incorporate Additional Data**: Integrating more granular data on disease progression or treatment plans could potentially improve the model’s accuracy and provide more tailored predictions for individual patients.
+
+2. **Explore Deep Learning Models**: Deep learning models, such as neural networks, may be able to capture complex, non-linear relationships in the data that traditional models may miss. 
+
+3. **Using SHAP (SHapley Additive exPlanations) for Model Interpretability**:
+   - **Understanding Feature Impact**: SHAP values can provide insights into how much each feature contributes to the predicted length of stay for each individual patient. This allows for identifying the most influential factors driving the predictions on a patient-by-patient basis.
+   - **Explaining Predictions**: SHAP can help explain why the model predicts a certain length of stay for a specific patient.
+   - **Identifying Potential Biases**: By examining SHAP values across different patient subgroups (e.g., based on age, gender, or disease severity), potential biases in the model can be identified. It would be possible to detect if the model is overly reliant on age or gender, helping to ensure fair and unbiased predictions.
+   - **Improving Model Transparency**: Using SHAP increases model transparency, making it easier for clinicians and other stakeholders to understand and trust the model’s predictions.
