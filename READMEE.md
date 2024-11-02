@@ -104,7 +104,7 @@ The project uses four datasets containing patient information:
 ## Deployment
 
 1. **Saving the Model**:
-   - The final tuned Gradient Boosting model was saved using `joblib` as `gradient_boosting_model.pkl` for easy loading and use in deployment.
+   - The final Gradient Boosting model was saved using `joblib` as `gradient_boosting_model.pkl` for easy loading and use in deployment.
 
 2. **Usage Instructions**:
    - To use the model, load it using `joblib.load('gradient_boosting_model.pkl')`.
