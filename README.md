@@ -15,7 +15,7 @@
 # Hospital Length of Stay Prediction
 
 ## Project Overview
-This project aims to predict the expected length of hospital stay for patients based on demographic, physiological, and disease severity data. The goal is to build a robust machine learning model that can aid hospitals in resource planning by forecasting patient stay durations.
+This project aims to predict the expected length of hospital stay for patients based on demographic, physiological, and disease severity data. The goal is to build a machine learning model that can aid hospitals in resource planning by forecasting patient stay durations.
 
 ## Project Structure
 The project is organized into the following steps:
